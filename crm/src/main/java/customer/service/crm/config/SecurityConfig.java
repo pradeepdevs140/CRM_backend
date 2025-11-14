@@ -16,17 +16,21 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 import customer.service.crm.Service.AppUserDetailService;
+import customer.service.crm.util.JwtRequestFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Autowired
+	private JwtRequestFilter jwtRequestFilter;
 	@Autowired
 	private AppUserDetailService appUserDetailService;
     @Bean
@@ -35,14 +39,16 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/login", "/register", "/send-reset-otp", "/reset-password", "/logout")
+                .requestMatchers("/login", "/register", "/send-reset-otp", "/reset-password", "/logout","/api/user/register")
                 .permitAll()
                 .anyRequest().authenticated()
             )
             .sessionManagement(session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
-            .logout(AbstractHttpConfigurer::disable);
+            
+            .logout(AbstractHttpConfigurer::disable)
+            .addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter.class );
 
         return http.build();
     }

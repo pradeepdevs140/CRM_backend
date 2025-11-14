@@ -1,55 +1,53 @@
 package customer.service.crm.io;
 
-
-
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class ProfileRequest {
 
-	@NotBlank
-	private String name;
-	
-	public ProfileRequest(String name, String email, String password) {
-		super();
-		this.name = name;
-		this.email = email;
-		this.password = password;
-	}
-	public ProfileRequest() {
-		
-	}
+    @NotBlank(message = "Name cannot be blank")
+    private String name;
 
+    @Email(message = "Invalid email format")
+    @NotNull(message = "Email is required")
+    private String email;
 
-	public String getName() {
-		return name;
-	}
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    private String password;
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public ProfileRequest() {
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public ProfileRequest(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getPassword() {
-		return password;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	@Email
-	@NotNull
-	private String email;
-	@Min(6)
-	private String password;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
