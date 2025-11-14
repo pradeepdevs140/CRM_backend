@@ -35,6 +35,13 @@ public class ProfileService implements ProfileServiceImp {
         throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already exist");
     }
 
+	@Override
+	public ProfileResponse getProfile(String email) {
+		// TODO Auto-generated method stub
+	UserEntity existingUser=	userRepo.findByEmail(email).orElseThrow(()-> new RuntimeException("User not found" +email));
+	
+	return convertToProfileResponse(existingUser);
+		}
     private ProfileResponse convertToProfileResponse(UserEntity newProfile) {
         ProfileResponse response = new ProfileResponse();
         response.setUserId(newProfile.getUserId());
@@ -59,4 +66,6 @@ public class ProfileService implements ProfileServiceImp {
 
         return userEntity;
     }
+
+
 }

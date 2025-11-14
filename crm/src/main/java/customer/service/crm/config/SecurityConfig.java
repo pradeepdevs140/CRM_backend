@@ -30,6 +30,8 @@ import customer.service.crm.util.JwtRequestFilter;
 public class SecurityConfig {
 
 	@Autowired
+	private CustomAuthenticationEntryPoint customAuthenticationEntrypoint;
+	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 	@Autowired
 	private AppUserDetailService appUserDetailService;
@@ -48,7 +50,8 @@ public class SecurityConfig {
             )
             
             .logout(AbstractHttpConfigurer::disable)
-            .addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter.class );
+            .addFilterBefore(jwtRequestFilter,UsernamePasswordAuthenticationFilter.class )
+            .exceptionHandling(ex-> ex.authenticationEntryPoint(customAuthenticationEntrypoint));
 
         return http.build();
     }
